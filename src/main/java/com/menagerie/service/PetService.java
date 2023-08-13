@@ -11,4 +11,6 @@ public interface PetService {
 
 	BaseResponse addPetEntry(PetRequest request);
 
+	BaseResponse getPet(Integer id, String species, String key, String order);
+
 }
