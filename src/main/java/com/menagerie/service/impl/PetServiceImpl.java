@@ -14,8 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.menagerie.constant.Constants;
+import com.menagerie.dao.EventDao;
 import com.menagerie.dao.PetDao;
 import com.menagerie.dto.PetDto;
+import com.menagerie.dto.request.EventRequest;
 import com.menagerie.dto.request.PetRequest;
 import com.menagerie.dto.request.PetUpdateRequest;
 import com.menagerie.dto.response.BaseResponse;
@@ -38,6 +40,9 @@ public class PetServiceImpl implements PetService {
 
 	@Autowired
 	private PetDao petDao;
+
+	@Autowired
+	private EventDao eventDao;
 
 	@Override
 	public BaseResponse addPetEntry(PetRequest request) {
@@ -128,5 +133,22 @@ public class PetServiceImpl implements PetService {
 		log.info("Pet entry updated in db");
 		return BaseResponse.builder().status(Constants.SUCCESS).message(Constants.PET_UPDATE).data(petDto).build();
 	}
+
+
+	@Override
+	public BaseResponse addEvent(Integer id, EventRequest request) {
+		if (!petDao.existsById(id)) {
+			throw new ResourseNotFoundException(Constants.PET_NOT_FOUND + " " + "with given petId");
+		}
+		Event event = eventDao.save(mapDtoToEntity(id, request));
+		log.info("Pet event saved in db");
+		return BaseResponse.builder().status(Constants.SUCCESS).message(Constants.PET_SAVE).data(event).build();
+	}
+
+	private Event mapDtoToEntity(Integer id, EventRequest request) {
+		return Event.builder().petId(id).date(request.getDate()).type(request.getType()).remark(request.getRemark())
+				.build();
+	}
+
 
 }
