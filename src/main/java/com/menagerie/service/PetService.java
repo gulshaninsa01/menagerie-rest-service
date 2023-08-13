@@ -7,7 +7,8 @@ import com.menagerie.dto.response.BaseResponse;
 
 /**
  * @author gulshan
- * @apiNote PetService interface provide the methods to perform particular functionality for pet and their events.
+ * @apiNote PetService interface provide the methods to perform particular
+ *          functionality for pet and their events.
  */
 public interface PetService {
 
@@ -16,7 +17,9 @@ public interface PetService {
 	BaseResponse getPet(Integer id, String species, String key, String order);
 
 	BaseResponse udpatePetEntry(PetUpdateRequest request);
-	
+
 	BaseResponse addEvent(Integer id, EventRequest request);
+
+	BaseResponse deletePetEntry(Integer id);
 
 }

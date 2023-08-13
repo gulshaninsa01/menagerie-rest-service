@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.menagerie.service.impl;
 
 import java.util.ArrayList;
@@ -134,7 +131,6 @@ public class PetServiceImpl implements PetService {
 		return BaseResponse.builder().status(Constants.SUCCESS).message(Constants.PET_UPDATE).data(petDto).build();
 	}
 
-
 	@Override
 	public BaseResponse addEvent(Integer id, EventRequest request) {
 		if (!petDao.existsById(id)) {
@@ -150,5 +146,17 @@ public class PetServiceImpl implements PetService {
 				.build();
 	}
 
+	@Override
+	public BaseResponse deletePetEntry(Integer id) {
+		if (!petDao.existsById(id)) {
+			throw new ResourseNotFoundException(Constants.PET_NOT_FOUND);
+		}
+		if (eventDao.existsById(id)) {
+			eventDao.deleteById(id);
+		}
+		petDao.deleteById(id);
+		log.info("Pet entry deleted from db");
+		return BaseResponse.builder().status(Constants.SUCCESS).message(Constants.PET_DELETE).build();
+	}
 
 }

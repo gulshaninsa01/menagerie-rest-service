@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,8 @@ import com.menagerie.service.PetService;
 /**
  * 
  * @author gulshan
- * @apiNote PetController class contains methods that maps incoming request to specific methods based on URL match.
+ * @apiNote PetController class contains methods that maps incoming request to
+ *          specific methods based on URL match.
  *
  */
 @RestController
@@ -29,7 +31,6 @@ public class PetController {
 
 	@Autowired
 	private PetService petService;
-
 
 	@PostMapping(value = "/pets")
 	public ResponseEntity<Object> addPetEntry(@Valid @RequestBody PetRequest request) {
@@ -54,7 +55,9 @@ public class PetController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(petService.addEvent(id, request));
 	}
 
-	
-
+	@DeleteMapping("/pet/{id}")
+	public ResponseEntity<Object> deletePetEntry(@PathVariable Integer id) {
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(petService.deletePetEntry(id));
+	}
 
 }
