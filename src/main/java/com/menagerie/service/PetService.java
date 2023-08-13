@@ -1,5 +1,6 @@
 package com.menagerie.service;
 
+import com.menagerie.dto.request.EventRequest;
 import com.menagerie.dto.request.PetRequest;
 import com.menagerie.dto.request.PetUpdateRequest;
 import com.menagerie.dto.response.BaseResponse;
@@ -15,5 +16,7 @@ public interface PetService {
 	BaseResponse getPet(Integer id, String species, String key, String order);
 
 	BaseResponse udpatePetEntry(PetUpdateRequest request);
+	
+	BaseResponse addEvent(Integer id, EventRequest request);
 
 }

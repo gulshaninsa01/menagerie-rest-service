@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.menagerie.dto.request.EventRequest;
 import com.menagerie.dto.request.PetRequest;
 import com.menagerie.dto.request.PetUpdateRequest;
 import com.menagerie.service.PetService;
@@ -20,8 +21,7 @@ import com.menagerie.service.PetService;
 /**
  * 
  * @author gulshan
- * @apiNote PetController class contains methods that maps incoming request to
- *          specific methods based on URL match.
+ * @apiNote PetController class contains methods that maps incoming request to specific methods based on URL match.
  *
  */
 @RestController
@@ -29,6 +29,7 @@ public class PetController {
 
 	@Autowired
 	private PetService petService;
+
 
 	@PostMapping(value = "/pets")
 	public ResponseEntity<Object> addPetEntry(@Valid @RequestBody PetRequest request) {
@@ -47,5 +48,13 @@ public class PetController {
 	public ResponseEntity<Object> udpatePet(@Valid @RequestBody PetUpdateRequest request) {
 		return ResponseEntity.status(HttpStatus.OK).body(petService.udpatePetEntry(request));
 	}
+
+	@PostMapping(value = { "/pets/{id}" })
+	public ResponseEntity<Object> addEvent(@PathVariable Integer id, @Valid @RequestBody EventRequest request) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(petService.addEvent(id, request));
+	}
+
+	
+
 
 }
