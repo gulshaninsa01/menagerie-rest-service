@@ -17,6 +17,7 @@ import com.menagerie.constant.Constants;
 import com.menagerie.dao.PetDao;
 import com.menagerie.dto.PetDto;
 import com.menagerie.dto.request.PetRequest;
+import com.menagerie.dto.request.PetUpdateRequest;
 import com.menagerie.dto.response.BaseResponse;
 import com.menagerie.entity.Event;
 import com.menagerie.entity.Pet;
@@ -53,6 +54,17 @@ public class PetServiceImpl implements PetService {
 				.sex(request.getSex()).birth(request.getBirth()).death(request.getDeath()).build();
 	}
 
+	/**
+	 * Convert Entity to DTO
+	 * 
+	 * @param pet
+	 * @return
+	 */
+	private PetDto mapEntityToDto(Pet pet) {
+		return PetDto.builder().id(pet.getId()).name(pet.getName()).owner(pet.getOwner()).species(pet.getSpecies())
+				.sex(pet.getSex()).birth(pet.getBirth()).death(pet.getDeath()).build();
+	}
+
 	@Override
 	public BaseResponse getPet(Integer id, String species, String key, String order) {
 		Sort sort = setSorting(key, order);
@@ -71,7 +83,7 @@ public class PetServiceImpl implements PetService {
 
 	private Sort setSorting(String key, String order) {
 		Sort sort = Sort.by(Sort.Direction.ASC, "id");
-		if (Objects.nonNull(key) && !key.trim().equals("") && Objects.nonNull(order) && !order.trim().equals("") ) {
+		if (Objects.nonNull(key) && !key.trim().equals("") && Objects.nonNull(order) && !order.trim().equals("")) {
 			if (order.contains("dsc")) {
 				sort = Sort.by(Sort.Direction.DESC, key);
 			} else {
@@ -95,24 +107,26 @@ public class PetServiceImpl implements PetService {
 				.species(pet.getSpecies()).sex(pet.getSex()).birth(pet.getBirth()).death(pet.getDeath()).build()));
 		return petsList;
 	}
-	
+
 	private PetDto mapPetEntityToDto(Pet pet) {
-		PetDto petDto = PetDto.builder().id(pet.getId()).name(pet.getName()).owner(pet.getOwner()).species(pet.getSpecies())
-				.sex(pet.getSex()).birth(pet.getBirth()).death(pet.getDeath()).events(pet.getEvents()).build();
-		 List<Event> events = petDto.getEvents().stream().sorted(Comparator.comparing(Event::getDate)).collect(Collectors.toList());
-		 petDto.setEvents(events);
-		 return petDto;
+		PetDto petDto = PetDto.builder().id(pet.getId()).name(pet.getName()).owner(pet.getOwner())
+				.species(pet.getSpecies()).sex(pet.getSex()).birth(pet.getBirth()).death(pet.getDeath())
+				.events(pet.getEvents()).build();
+		List<Event> events = petDto.getEvents().stream().sorted(Comparator.comparing(Event::getDate))
+				.collect(Collectors.toList());
+		petDto.setEvents(events);
+		return petDto;
 	}
 
-	/**
-	 * Convert Entity to DTO
-	 * 
-	 * @param pet
-	 * @return
-	 */
-	private PetDto mapEntityToDto(Pet pet) {
-		return PetDto.builder().id(pet.getId()).name(pet.getName()).owner(pet.getOwner()).species(pet.getSpecies())
-				.sex(pet.getSex()).birth(pet.getBirth()).death(pet.getDeath()).build();
+	@Override
+	public BaseResponse udpatePetEntry(PetUpdateRequest request) {
+		Pet pet = petDao.findById(request.getId())
+				.orElseThrow(() -> new ResourseNotFoundException(Constants.PET_NOT_FOUND));
+		pet.setName(request.getName()).setOwner(request.getOwner()).setSpecies(request.getSpecies())
+				.setSex(request.getSex()).setBirth(request.getBirth()).setDeath(request.getDeath());
+		PetDto petDto = mapEntityToDto(petDao.save(pet));
+		log.info("Pet entry updated in db");
+		return BaseResponse.builder().status(Constants.SUCCESS).message(Constants.PET_UPDATE).data(petDto).build();
 	}
 
 }
