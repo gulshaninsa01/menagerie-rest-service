@@ -2,6 +2,18 @@
 
 RESTful APIs used to manage ```pets``` and their ```events``` in **menagerie**.
 
+> 1. GET: Pets List
+> 
+> 2. GET: Pet by Id with their events
+> 
+> 3. POST: Add Pet entry
+> 
+> 4. PUT: Update Pet entry
+> 
+> 5. POST: Add Pet event
+> 
+> 6. DELETE: Remove Pet event
+
 ---
 
 ### Reference Documentation
